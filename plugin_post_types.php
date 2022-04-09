@@ -974,10 +974,35 @@ class Transfers_Plugin_Post_Types extends Transfers_BaseSingleton {
 
 				$booking_object->departure_availability_price = $this->get_availability_entry_price($dep_availability_id, $departure_is_private);
 
-				if ($departure_is_private)
-					$booking_object->departure_total_price = $booking_object->departure_availability_price;
-				else
-					$booking_object->departure_total_price = $booking_object->departure_availability_price * $people_count;
+				// old code
+
+				// if ($departure_is_private)
+				// 	$booking_object->departure_total_price = $booking_object->departure_availability_price;
+				// else
+				// 	$booking_object->departure_total_price = $booking_object->departure_availability_price * $people_count;
+
+
+				// custom code start here
+
+				if ($departure_slot_minutes_number <= "360" || $departure_slot_minutes_number >=  "1320") {
+
+					$added_dep_price = $booking_object->departure_availability_price;
+
+					if ($departure_is_private)
+						$booking_object->departure_total_price = ($added_dep_price + $added_dep_price * 20 / 100);
+					else {
+						$booking_object->departure_total_price = (($added_dep_price + $added_ret_price * 20 / 100) * $people);
+					}
+				} else {
+					if ($departure_is_private)
+						$booking_object->departure_total_price = $booking_object->departure_availability_price;
+					else
+						$booking_object->departure_total_price = $booking_object->departure_availability_price * $people_count;
+				}
+
+				// custom code end here
+
+
 
 				$user_id = get_current_user_id();
 
@@ -1157,12 +1182,40 @@ class Transfers_Plugin_Post_Types extends Transfers_BaseSingleton {
 							$booking_object->return_transport_type = $return_availability->transport_type;
 						}
 
-						$booking_object->return_availability_price = $this->get_availability_entry_price($ret_availability_id, $return_is_private);
 
-						if ($return_is_private)
-							$booking_object->return_total_price = $booking_object->return_availability_price;
-						else
-							$booking_object->return_total_price = $booking_object->return_availability_price * $people_count;
+
+						$booking_object->return_availability_price = $this->get_availability_entry_price($ret_availability_id, $return_is_private);
+						
+						// old code
+
+						// if ($return_is_private)
+						// 	$booking_object->return_total_price = $booking_object->return_availability_price;
+						// else
+						// 	$booking_object->return_total_price = $booking_object->return_availability_price * $people_count;
+
+
+						// custom code start here
+
+						if ($return_slot_minutes_number <= "360" || $return_slot_minutes_number >=  "1320") {
+
+							$added_ret_price = $booking_object->return_availability_price;
+
+							if ($return_is_private)
+								$booking_object->return_total_price = ($added_ret_price + $added_ret_price * 20 / 100);
+							else {
+								$booking_object->return_total_price = (($added_ret_price + $added_ret_price * 20 / 100) * $people);
+							}
+						} else {
+							if ($return_is_private)
+								$booking_object->return_total_price = $booking_object->return_availability_price;
+							else
+								$booking_object->return_total_price = $booking_object->return_availability_price * $people_count;
+						}
+
+
+						// custom code end here
+
+
 
 						$return_extra_items_array = array();
 

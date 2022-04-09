@@ -59,6 +59,15 @@
 		
 		$formatted_return_date = date_i18n($date_format, strtotime($return_date));
 	}
+
+
+		// custom code start
+		$tf_time_range_1 = "1320"; // 10.00pm
+		$tf_time_range_2 = "360"; // 6.00am
+		$tf_time_range_3 = $slot_minutes_number; // selected site
+		// custom code end
+
+
 		
 ?>
 <!-- Item -->
@@ -88,7 +97,24 @@
 	<div class="one-fourth heightfix">
 		<div>
 			<div class="price">
-				<?php 
+				<?php
+
+// Custom code start here
+				$tf_price_pre = $formatted_price;
+
+				if ($tf_time_range_3 >= $tf_time_range_1 || $tf_time_range_3 <= $tf_time_range_2) {
+
+					$tf_price = $tf_price_pre + $tf_price_pre * 20 / 100;
+				} else {
+
+					$tf_price = $tf_price_pre;
+				}
+
+				$formatted_price = $tf_price;
+
+// Custom code end here
+
+
 				if ($show_currency_symbol_after) {
 					echo esc_html($formatted_price . ' ' . $default_currency_symbol . '');
 				} else {
